@@ -3,10 +3,10 @@ An experimental SwiftUI playground where I explored some of the coolest iOS APIs
 
 ## What is Retrobooth?
 Retrobooth lets you:
-- Import a photo using the new PhotosPicker.
+- Import a photo using the new `PhotosPicker`.
 - Apply different Core Image filters (Sepia, Pixellate, Gaussian Blur, Crystallize, and more).
 - Adjust filter intensity in real time with a slider.
-- Share the processed photo using ShareLink.
+- Share the processed photo using `ShareLink`.
 - Prompt users for an App Store review after repeated interactions.
 - Use confirmation dialogs for filter selection.
 
