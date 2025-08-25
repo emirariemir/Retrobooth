@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var selectedPhoto: PhotosPickerItem?
     
     @State private var filter = CIFilter.sepiaTone()
+    let context = CIContext()
     
     var body: some View {
         NavigationStack {
@@ -39,6 +40,7 @@ struct ContentView: View {
                 HStack {
                     Text("Intensity")
                     Slider(value: $filterIntensity)
+                        .onChange(of: filterIntensity, applyProcessing)
                 }
                 .padding(.vertical)
                 
@@ -65,8 +67,26 @@ struct ContentView: View {
             guard let imageData = try await selectedPhoto?.loadTransferable(type: Data.self) else { return }
             guard let inputImage = UIImage(data: imageData) else { return }
 
-            // more code to come
+            let beginImage = CIImage(image: inputImage)
+            
+            /// Core Image filters technically provide an `inputImage` property for assigning
+            /// a `CIImage`, but this is often unreliable and may cause crashes. Instead,
+            /// it’s safer to use `setValue(_:forKey:)` with the key `kCIInputImageKey`.
+            filter.setValue(beginImage, forKey: kCIInputImageKey)
+            
+            applyProcessing()
         }
+    }
+    
+    func applyProcessing() {
+        filter.intensity = Float(filterIntensity)
+        
+        guard let outputImage =  filter.outputImage else { return }
+        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent)
+            else { return }
+        
+        let uiImage = UIImage(cgImage: cgImage)
+        processedImage = Image(uiImage: uiImage)
     }
 
 }
