@@ -25,7 +25,10 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(alignment: .leading) {
+                Text("Click on the center to change image.")
+                    .font(.footnote)
+                
                 Spacer()
                 
                 PhotosPicker(selection: $selectedPhoto) {
@@ -33,6 +36,7 @@ struct ContentView: View {
                         processedImage
                             .resizable()
                             .scaledToFit()
+                            .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
                     } else {
                         ContentUnavailableView("No Picture", systemImage: "photo.badge.plus", description: Text("Tap to import a photo"))
                     }
@@ -41,13 +45,6 @@ struct ContentView: View {
                 .onChange(of: selectedPhoto, loadImage)
                 
                 Spacer()
-                
-                HStack {
-                    Text("Intensity")
-                    Slider(value: $filterIntensity)
-                        .onChange(of: filterIntensity, applyProcessing)
-                }
-                .padding(.vertical)
                 
                 HStack {
                     Button("Change filter", action: changeFilter)
@@ -62,15 +59,40 @@ struct ContentView: View {
             }
             .padding([.horizontal, .bottom])
             .navigationTitle("Retrobooth")
-            .confirmationDialog("Select a filter", isPresented: $filterDialogShowing) {
-                Button("Crystallize") { setFilter(CIFilter.crystallize()) }
-                Button("Edges") { setFilter(CIFilter.edges()) }
-                Button("Gaussian Blur") { setFilter(CIFilter.gaussianBlur()) }
-                Button("Pixellate") { setFilter(CIFilter.pixellate()) }
-                Button("Sepia Tone") { setFilter(CIFilter.sepiaTone()) }
-                Button("Unsharp Mask") { setFilter(CIFilter.unsharpMask()) }
-                Button("Vignette") { setFilter(CIFilter.vignette()) }
-                Button("Cancel", role: .cancel) { }
+            .sheet(isPresented: $filterDialogShowing) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Select a Filter")
+                        .font(.title2)
+                        .bold()
+                    
+                    FilterButton(
+                        title: "Caramel Fade",
+                        description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
+                        backgroundColor: .brown
+                    ) {
+                        setFilter(CIFilter.caramelFade())
+                    }
+                    
+                    FilterButton(
+                        title: "Arctic Mist",
+                        description: "A crisp, cool look: daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
+                        backgroundColor: .blue
+                    ) {
+                        setFilter(CIFilter.arcticMist())
+                    }
+                    
+                    Spacer()
+                    
+                    FilterButton(
+                        title: "Close",
+                        alignment: .center,
+                        backgroundColor: .red
+                    ) {
+                        filterDialogShowing = false
+                    }
+                }
+                .presentationDetents([.medium])
+                .padding()
             }
         }
     }
@@ -83,8 +105,9 @@ struct ContentView: View {
         Task {
             guard let imageData = try await selectedPhoto?.loadTransferable(type: Data.self) else { return }
             guard let inputImage = UIImage(data: imageData) else { return }
-
-            let beginImage = CIImage(image: inputImage)
+            
+            let beginImage = CIImage(image: inputImage)?
+                .oriented(forExifOrientation: exifOrientation(inputImage.imageOrientation))
             
             /// Core Image filters technically provide an `inputImage` property for assigning
             /// a `CIImage`, but this is often unreliable and may cause crashes. Instead,
@@ -110,7 +133,7 @@ struct ContentView: View {
         
         guard let outputImage =  filter.outputImage else { return }
         guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent)
-            else { return }
+        else { return }
         
         let uiImage = UIImage(cgImage: cgImage)
         processedImage = Image(uiImage: uiImage)
@@ -120,13 +143,28 @@ struct ContentView: View {
         filter = chosenFilter
         loadImage()
         
+        filterDialogShowing = false
+        
         chosenFilterCount += 1
-
-        if chosenFilterCount >= 10 {
+        
+        if chosenFilterCount >= 100 {
             requestReview()
         }
     }
-
+    
+    func exifOrientation(_ orientation: UIImage.Orientation) -> Int32 {
+        switch orientation {
+        case .up: return 1
+        case .down: return 3
+        case .left: return 8
+        case .right: return 6
+        case .upMirrored: return 2
+        case .downMirrored: return 4
+        case .leftMirrored: return 5
+        case .rightMirrored: return 7
+        @unknown default: return 1
+        }
+    }
 }
 
 #Preview {
