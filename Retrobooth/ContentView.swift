@@ -13,9 +13,12 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var processedImage: Image?
+    @State private var selectedImages = [Image]()
     @State private var filterIntensity = 0.5
-    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var pickerItems = [PhotosPickerItem]()
     @State private var filterDialogShowing = false
+    
+    @State var selectedUiImages: [UIImage] = []
     
     @AppStorage("chosenFilterCount") var chosenFilterCount = 0
     @Environment(\.requestReview) var requestReview
@@ -26,34 +29,73 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                Text("Click on the center to change image.")
-                    .font(.footnote)
-                
-                Spacer()
-                
-                PhotosPicker(selection: $selectedPhoto) {
-                    if let processedImage {
-                        processedImage
-                            .resizable()
-                            .scaledToFit()
-                            .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
+                PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
+                    if selectedImages.count > 0 {
+                        ScrollView {
+                            ForEach(0..<selectedImages.count, id: \.self) { i in
+                                selectedImages[i]
+                                    .resizable()
+                                    .scaledToFit()
+                                    .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                        .scrollIndicators(.hidden)
                     } else {
-                        ContentUnavailableView("No Picture", systemImage: "photo.badge.plus", description: Text("Tap to import a photo"))
+                        VStack() {
+                            Image("empty-folder")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundStyle(.blue)
+                            
+                            Text("No picture, press me.")
+                                .font(.headline)
+                            
+                            Text("You can select up to 10 photos.")
+                                .font(.footnote)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .multilineTextAlignment(.center)
+                        
                     }
                 }
                 .buttonStyle(.plain)
-                .onChange(of: selectedPhoto, loadImage)
+                .onChange(of: pickerItems, loadImage)
                 
                 Spacer()
                 
-                HStack {
-                    Button("Change filter", action: changeFilter)
+                VStack {
+                    CustomButton(
+                        title: "Change Filter",
+                        alignment: .center,
+                        backgroundColor: .primary,
+                        action: changeFilter
+                    )
                     
-                    Spacer()
-                    
-                    if let processedImage {
-                        ShareLink(item: processedImage, preview: SharePreview("Your beautiful image", image: processedImage))
+                    if selectedImages.count > 0 {
+                        ShareLink(
+                            items: selectedImages
+                        ) { img in
+                            SharePreview("Your beautiful image", image: img)
+                        } label: {
+                            CustomButtonLabel(
+                                title: "Share",
+                                alignment: .center,
+                                backgroundColor: .blue,
+                                isDisabled: false
+                            )
+                        }
+                        .disabled(false)
+                    } else {
+                        CustomButtonLabel(
+                            title: "Share",
+                            alignment: .center,
+                            backgroundColor: .blue,
+                            isDisabled: true
+                        )
                     }
+                    
                 }
                 
             }
@@ -65,7 +107,7 @@ struct ContentView: View {
                         .font(.title2)
                         .bold()
                     
-                    FilterButton(
+                    CustomButton(
                         title: "Caramel Fade",
                         description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
                         backgroundColor: .brown
@@ -73,7 +115,7 @@ struct ContentView: View {
                         setFilter(CIFilter.caramelFade())
                     }
                     
-                    FilterButton(
+                    CustomButton(
                         title: "Arctic Mist",
                         description: "A crisp, cool look: daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
                         backgroundColor: .blue
@@ -83,7 +125,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    FilterButton(
+                    CustomButton(
                         title: "Close",
                         alignment: .center,
                         backgroundColor: .red
@@ -103,40 +145,33 @@ struct ContentView: View {
     
     func loadImage() {
         Task {
-            guard let imageData = try await selectedPhoto?.loadTransferable(type: Data.self) else { return }
-            guard let inputImage = UIImage(data: imageData) else { return }
+            selectedImages.removeAll()
             
-            let beginImage = CIImage(image: inputImage)?
-                .oriented(forExifOrientation: exifOrientation(inputImage.imageOrientation))
-            
-            /// Core Image filters technically provide an `inputImage` property for assigning
-            /// a `CIImage`, but this is often unreliable and may cause crashes. Instead,
-            /// it’s safer to use `setValue(_:forKey:)` with the key `kCIInputImageKey`.
-            filter.setValue(beginImage, forKey: kCIInputImageKey)
-            
-            applyProcessing()
+            for item in pickerItems {
+                guard let imageData = try await item.loadTransferable(type: Data.self) else { return }
+                guard let inputImage = UIImage(data: imageData) else { return }
+                let beginImage = CIImage(image: inputImage)?
+                    .oriented(forExifOrientation: exifOrientation(inputImage.imageOrientation))
+                
+                /// Core Image filters technically provide an `inputImage` property for assigning
+                /// a `CIImage`, but this is often unreliable and may cause crashes. Instead,
+                /// it’s safer to use `setValue(_:forKey:)` with the key `kCIInputImageKey`.
+                filter.setValue(beginImage, forKey: kCIInputImageKey)
+                
+                if let processedImg = applyProcessing() {
+                    selectedImages.append(processedImg)
+                }
+            }
         }
     }
     
-    func applyProcessing() {
-        let inputKeys = filter.inputKeys
-        
-        if inputKeys.contains(kCIInputIntensityKey) {
-            filter.setValue(filterIntensity, forKey: kCIInputIntensityKey)
-        }
-        if inputKeys.contains(kCIInputRadiusKey) {
-            filter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey)
-        }
-        if inputKeys.contains(kCIInputScaleKey) {
-            filter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey)
-        }
-        
-        guard let outputImage =  filter.outputImage else { return }
+    func applyProcessing() -> Image?  {
+        guard let outputImage =  filter.outputImage else { return nil }
         guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent)
-        else { return }
-        
+        else { return nil }
         let uiImage = UIImage(cgImage: cgImage)
         processedImage = Image(uiImage: uiImage)
+        return processedImage
     }
     
     @MainActor func setFilter (_ chosenFilter: CIFilter) {
