@@ -33,26 +33,26 @@ struct ContentView: View {
                                 .scaledToFit()
                                 .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
                         }
+                        PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
+                            CustomPhotoPickerContent(
+                                imageName: "change",
+                                title: "Done with those?",
+                                description: "Press here to start all over again."
+                            )
+                        }
+                        .padding(.vertical, 20)
+                        .buttonStyle(.plain)
+                        .onChange(of: pickerItems, loadImage)
                     }
                     .padding(.horizontal, 8)
                     .scrollIndicators(.hidden)
                 } else {
                     PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
-                        VStack() {
-                            Image("empty-folder")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .foregroundStyle(.blue)
-                            
-                            Text("No picture, press me.")
-                                .font(.headline)
-                            
-                            Text("You can select up to 10 photos.")
-                                .font(.footnote)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .multilineTextAlignment(.center)
+                        CustomPhotoPickerContent(
+                            imageName: "empty-folder",
+                            title: "No picture, press me.",
+                            description: "You can select up to 10 photos."
+                        )
                     }
                     .buttonStyle(.plain)
                     .onChange(of: pickerItems, loadImage)
