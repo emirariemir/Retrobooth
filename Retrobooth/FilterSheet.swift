@@ -12,6 +12,7 @@ struct FilterOption: Identifiable {
     let id = UUID()
     let title: String
     let description: String
+    let goesGoodWithDesc: String
     let colors: [Color]
     let makeFilter: () -> CIFilter
 }
@@ -24,6 +25,7 @@ struct FilterSheet: View {
         .init(
             title: "Caramel Fade",
             description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
+            goesGoodWithDesc: "Perfect for warm portraits, cozy café moments, golden hour light, and scenes where you want a soft nostalgic glow.",
             colors: [
                 Color("CaramelFade1"),
                 Color("CaramelFade2"),
@@ -35,6 +37,7 @@ struct FilterSheet: View {
         .init(
             title: "Arctic Mist",
             description: "A crisp, cool look: daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
+            goesGoodWithDesc: "Works beautifully with snowy landscapes, fresh seaside captures, minimalist setups, or any photo that needs a clean, airy vibe.",
             colors: [
                 Color("ArcticMist1"),
                 Color("ArcticMist2"),
@@ -46,6 +49,7 @@ struct FilterSheet: View {
         .init(
             title: "Polar Radiance",
             description: "Brighter, icier look: stronger cool shift, white-point bias, clean bloom, crisp edges.",
+            goesGoodWithDesc: "Best paired with night skies, glacial scenery, futuristic architecture, or shots that need sharp highlights and radiant energy.",
             colors: [
                 Color("PolarRadiance1"),
                 Color("PolarRadiance2"),
@@ -57,6 +61,7 @@ struct FilterSheet: View {
         .init(
             title: "Patina Grain",
             description: "Cool-leaning vintage: lighter sepia, gentle cool shift, soft film grain, deeper vignette.",
+            goesGoodWithDesc: "Ideal for moody street photography, retro interiors, timeless portraits, and anything that calls for a film-like vintage texture.",
             colors: [
                 Color("PatinaGrain1"),
                 Color("PatinaGrain2"),
@@ -68,6 +73,7 @@ struct FilterSheet: View {
         .init(
             title: "Retro Pixel",
             description: "Playful pixelation with posterized colors and a hint of vignette for retro readability.",
+            goesGoodWithDesc: "Great for game screenshots, neon-lit selfies, playful edits, or any scene where a nostalgic 8-bit arcade mood fits the story.",
             colors: [
                 Color("RetroPixel1"),
                 Color("RetroPixel2"),
@@ -78,37 +84,54 @@ struct FilterSheet: View {
         ),
     ]
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Select a Filter")
-                .font(.title2.weight(.bold))
+    
+    @State private var selection: Int = 0
 
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    ForEach(options) { option in
-                        CustomMeshGradientButton(
-                            title: option.title,
-                            description: option.description,
-                            colors: option.colors
-                        ) {
-                            onSelect(option.makeFilter())
+    var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Select a Filter")
+                    .font(.title2.weight(.bold))
+
+                TabView(selection: $selection) {
+                    ForEach(options.indices, id: \.self) { idx in
+                        VStack(spacing: 12) {
+                            CustomMeshGradientButtonLabel(
+                                title: options[idx].title,
+                                description: options[idx].description,
+                                colors: options[idx].colors
+                            )
+                            .padding(.horizontal)
+                            
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(options[idx].goesGoodWithDesc)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.horizontal)
                         }
+                        .tag(idx)
                     }
                 }
-                .padding(.top, 4)
-            }
+                .tabViewStyle(.page(indexDisplayMode: .automatic))
+                .indexViewStyle(.page(backgroundDisplayMode: .always))
+                
+                .clipShape(RoundedRectangle(cornerRadius: 12))
 
-            Spacer(minLength: 8)
+                Spacer(minLength: 8)
 
-            CustomButton(
-                title: "Close",
-                alignment: .center,
-                backgroundColor: .red
-            ) {
-                isPresented = false
+                CustomButton(
+                    title: "Select This Filter",
+                    alignment: .center,
+                    backgroundColor: .primary
+                ) {
+                    guard options.indices.contains(selection) else { return }
+                    onSelect(options[selection].makeFilter())
+                    isPresented = false
+                }
+                .disabled(options.isEmpty)
             }
+            .padding()
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
         }
-        .padding()
-        .presentationDragIndicator(.visible)
-    }
 }

@@ -185,9 +185,9 @@ struct ContentView: View {
         
         currentFilterName = determineFilterName(chosenFilter.name)
         
-        if chosenFilterCount >= 100 {
-            requestReview()
-        }
+        // if chosenFilterCount >= 100 {
+            // requestReview()
+        // }
     }
     
     func determineFilterName(_ filterName: String) -> String {

@@ -5,6 +5,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>FunnelDisplay-Medium.ttf</string>
+		<string>FunnelDisplay-Light.ttf</string>
 	</array>
 </dict>
 </plist>

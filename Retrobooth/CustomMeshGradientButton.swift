@@ -51,7 +51,7 @@ struct CustomMeshGradientButtonLabel: View {
             
             if let description = description {
                 Text(description)
-                    .font(.caption)
+                    .font(.subheadline)
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.white)
             }

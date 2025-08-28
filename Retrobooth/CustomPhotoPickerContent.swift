@@ -14,18 +14,19 @@ struct CustomPhotoPickerContent: View {
     let description: String
     
     var body: some View {
-        VStack() {
+        VStack(spacing: 6) {
             Image(imageName)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .foregroundStyle(.blue)
+                .padding(.bottom, 2)
             
             Text(title)
-                .font(.headline)
+                .font(.custom("FunnelDisplay-Medium", size: 20))
             
             Text(description)
-                .font(.footnote)
+                .font(.custom("FunnelDisplay-Light", size: 14))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .multilineTextAlignment(.center)

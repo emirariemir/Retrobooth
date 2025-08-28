@@ -40,15 +40,16 @@ struct FilterSelectorButton: View {
             HStack(alignment: .center, spacing: 16) {
                 VStack(alignment: .leading) {
                     Text("Selected filter:")
-                        .font(.footnote)
+                        .font(.custom("FunnelDisplay-Light", size: 12))
                         .foregroundStyle(.white)
                         .opacity(0.7)
                     Text(filterName)
-                        .font(.system(.title3, weight: .bold))
+                        .font(.custom("FunnelDisplay-Medium", size: 20))
                         .foregroundStyle(.white)
                 }
                 
                 Image(systemName: "chevron.up")
+                    .font(.system(size: 16))
                     .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
