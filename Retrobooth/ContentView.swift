@@ -41,7 +41,7 @@ struct ContentView: View {
                             }
                             
                             PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
-                                CustomPhotoPickerContent(
+                                PhotoPickerContent(
                                     imageName: "change",
                                     title: "Done with those?",
                                     description: "Press here to start all over again."
@@ -56,7 +56,7 @@ struct ContentView: View {
                         
                     } else {
                         PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
-                            CustomPhotoPickerContent(
+                            PhotoPickerContent(
                                 imageName: "empty-folder",
                                 title: "No picture, press me.",
                                 description: "You can select up to 10 photos."
@@ -84,9 +84,9 @@ struct ContentView: View {
                 }
                 .padding([.horizontal, .bottom])
                 .toolbar {
-                    ToolbarItem(placement: .principal) {
+                    ToolbarItem(placement: .navigation) {
                         Text("Retrobooth")
-                            .font(.custom("FunnelDisplay-Medium", size: 24))
+                            .font(.custom("FunnelDisplay-Medium", size: 32))
                             .foregroundColor(.primary)
                     }
                 }

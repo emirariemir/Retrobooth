@@ -1,14 +1,14 @@
 //
-//  CustomPhotoPickerContent.swift
+//  PhotoPickerContent.swift
 //  Retrobooth
 //
-//  Created by Emir Arı on 27.08.2025.
+//  Created by Emir Arı on 28.08.2025.
 //
 
 import SwiftUI
 import PhotosUI
 
-struct CustomPhotoPickerContent: View {
+struct PhotoPickerContent: View {
     let imageName: String
     let title: String
     let description: String

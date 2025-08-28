@@ -12,26 +12,25 @@ struct ExportButton: View {
         HStack {
             Image(systemName: "square.and.arrow.up")
                 .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(.black)
             Text("Export")
                 .font(.custom("FunnelDisplay-Medium", size: 16))
-                .foregroundStyle(.white)
+                .foregroundStyle(.black)
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 10)
         .background(
             AnimatedMeshGradientView()
-                .mask(
+                .overlay(
                     RoundedRectangle(cornerRadius: 64)
-                        .stroke(lineWidth: 12)
-                        .blur(radius: 8)
+                        .foregroundStyle(.white)
+                        .blur(radius: 32)
                 )
         )
-        .background(.black)
         .cornerRadius(64)
         .background(
             RoundedRectangle(cornerRadius: 64)
-                .stroke(.white.opacity(0.9), lineWidth: 2)
+                .stroke(.white, lineWidth: 4)
         )
     }
 }
@@ -50,22 +49,22 @@ struct AnimatedMeshGradientView: View {
                 [0.0, 1.0], [1.0, bobble ? 2.0 : 1.0], [1.0, 1.0]
             ],
             colors: [
-                bobble ? .red : .mint,
-                bobble ? .yellow : .cyan,
-                .orange,
-                wobble ? .blue : .red,
-                wobble ? .cyan : .white,
-                wobble ? .red : .purple,
-                wobble ? .red : .cyan,
-                wobble ? .mint : .blue,
-                bobble ? .red : .blue
+                bobble ? Color("SoftGrey") : Color("SoftGreen"),
+                bobble ? Color("SoftPurple") : Color("SoftGreen"),
+                wobble ? Color("SoftPurple") : Color("SoftPink"),
+                wobble ? Color("SoftGreen") : Color("SoftGrey"),
+                wobble ? Color("SoftPink") : Color("SoftPurple"),
+                wobble ? Color("SoftPink") : Color("SoftGreen"),
+                wobble ? Color("SoftGreen") : Color("SoftPink"),
+                wobble ? Color("SoftGreen") : Color("SoftGrey"),
+                bobble ? Color("SoftPink") : Color("SoftGreen")
             ]
         )
         .onAppear {
-            withAnimation(.easeInOut(duration: 11).repeatForever(autoreverses: true)) {
+            withAnimation(.easeInOut(duration: 4).repeatForever(autoreverses: true)) {
                 wobble.toggle()
             }
-            withAnimation(.easeInOut(duration: 13).repeatForever(autoreverses: true)) {
+            withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
                 bobble.toggle()
             }
         }

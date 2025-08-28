@@ -7,27 +7,6 @@
 
 import SwiftUI
 
-struct CustomMeshGradientButton: View {
-    var title: String
-    var description: String?
-    var icon: String?
-    var alignment: HorizontalAlignment = .leading
-    var colors: [Color]
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            CustomMeshGradientButtonLabel(
-                title: title,
-                description: description,
-                icon: icon,
-                alignment: alignment,
-                colors: colors
-            )
-        }
-    }
-}
-
 struct CustomMeshGradientButtonLabel: View {
     var title: String
     var description: String?
