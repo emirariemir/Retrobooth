@@ -12,7 +12,7 @@ struct FilterOption: Identifiable {
     let id = UUID()
     let title: String
     let description: String
-    let color: Color
+    let colors: [Color]
     let makeFilter: () -> CIFilter
 }
 
@@ -24,31 +24,56 @@ struct FilterSheet: View {
         .init(
             title: "Caramel Fade",
             description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
-            color: .brown,
+            colors: [
+                Color("CaramelFade1"),
+                Color("CaramelFade2"),
+                Color("CaramelFade3"),
+                Color("CaramelFade4")
+            ],
             makeFilter: { CIFilter.caramelFade() }
         ),
         .init(
             title: "Arctic Mist",
             description: "A crisp, cool look: daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
-            color: .blue,
+            colors: [
+                Color("ArcticMist1"),
+                Color("ArcticMist2"),
+                Color("ArcticMist3"),
+                Color("ArcticMist4")
+            ],
             makeFilter: { CIFilter.arcticMist() }
         ),
         .init(
             title: "Polar Radiance",
             description: "Brighter, icier look: stronger cool shift, white-point bias, clean bloom, crisp edges.",
-            color: .teal,
+            colors: [
+                Color("PolarRadiance1"),
+                Color("PolarRadiance2"),
+                Color("PolarRadiance3"),
+                Color("PolarRadiance4")
+            ],
             makeFilter: { CIFilter.polarRadiance() }
         ),
         .init(
             title: "Patina Grain",
             description: "Cool-leaning vintage: lighter sepia, gentle cool shift, soft film grain, deeper vignette.",
-            color: .indigo,
+            colors: [
+                Color("PatinaGrain1"),
+                Color("PatinaGrain2"),
+                Color("PatinaGrain3"),
+                Color("PatinaGrain4")
+            ],
             makeFilter: { CIFilter.patinaGrain() }
         ),
         .init(
             title: "Retro Pixel",
             description: "Playful pixelation with posterized colors and a hint of vignette for retro readability.",
-            color: .cyan,
+            colors: [
+                Color("RetroPixel1"),
+                Color("RetroPixel2"),
+                Color("RetroPixel3"),
+                Color("RetroPixel4")
+            ],
             makeFilter: { CIFilter.retroPixel() }
         ),
     ]
@@ -61,10 +86,10 @@ struct FilterSheet: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 12) {
                     ForEach(options) { option in
-                        CustomButton(
+                        CustomMeshGradientButton(
                             title: option.title,
                             description: option.description,
-                            backgroundColor: option.color
+                            colors: option.colors
                         ) {
                             onSelect(option.makeFilter())
                         }

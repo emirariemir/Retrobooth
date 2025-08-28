@@ -31,7 +31,34 @@ struct CustomButton: View {
     }
 }
 
+struct FilterSelectorButton: View {
+    var filterName: String
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(alignment: .center, spacing: 16) {
+                VStack(alignment: .leading) {
+                    Text("Selected filter:")
+                        .font(.footnote)
+                        .foregroundStyle(.white)
+                        .opacity(0.7)
+                    Text(filterName)
+                        .font(.system(.title3, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+                
+                Image(systemName: "chevron.up")
+                    .foregroundStyle(.white)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
 struct CustomButtonLabel: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     var title: String
     var description: String?
     var icon: String?
@@ -50,14 +77,14 @@ struct CustomButtonLabel: View {
 
                 Text(title)
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(colorScheme == .light ? .white : .black)
             }
 
             if let description = description {
                 Text(description)
                     .font(.caption)
                     .multilineTextAlignment(.leading)
-                    .foregroundColor(.primary.opacity(0.8))
+                    .foregroundStyle(colorScheme == .light ? .white : .black)
             }
         }
         .frame(maxWidth: .infinity, alignment: alignment == .leading ? .leading : .center)
