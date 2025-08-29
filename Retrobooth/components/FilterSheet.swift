@@ -14,13 +14,14 @@ struct FilterOption: Identifiable {
     let description: String
     let goesGoodWithDesc: String
     let colors: [Color]
+    let filterName: String
     let makeFilter: () -> CIFilter
 }
 
 struct FilterSheet: View {
     @Binding var isPresented: Bool
     var onSelect: (CIFilter) -> Void
-
+    
     private let options: [FilterOption] = [
         .init(
             title: "Caramel Fade",
@@ -32,6 +33,7 @@ struct FilterSheet: View {
                 Color("CaramelFade3"),
                 Color("CaramelFade4")
             ],
+            filterName: "caramelFade",
             makeFilter: { CIFilter.caramelFade() }
         ),
         .init(
@@ -44,6 +46,7 @@ struct FilterSheet: View {
                 Color("ArcticMist3"),
                 Color("ArcticMist4")
             ],
+            filterName: "arcticMist",
             makeFilter: { CIFilter.arcticMist() }
         ),
         .init(
@@ -56,6 +59,7 @@ struct FilterSheet: View {
                 Color("PolarRadiance3"),
                 Color("PolarRadiance4")
             ],
+            filterName: "polarRadiance",
             makeFilter: { CIFilter.polarRadiance() }
         ),
         .init(
@@ -68,6 +72,7 @@ struct FilterSheet: View {
                 Color("PatinaGrain3"),
                 Color("PatinaGrain4")
             ],
+            filterName: "patinaGrain",
             makeFilter: { CIFilter.patinaGrain() }
         ),
         .init(
@@ -80,58 +85,47 @@ struct FilterSheet: View {
                 Color("RetroPixel3"),
                 Color("RetroPixel4")
             ],
+            filterName: "retroPixel",
             makeFilter: { CIFilter.retroPixel() }
         ),
     ]
-
+    
     
     @State private var selection: Int = 0
-
+    
     var body: some View {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Select a Filter")
-                    .font(.title2.weight(.bold))
-
-                TabView(selection: $selection) {
-                    ForEach(options.indices, id: \.self) { idx in
-                        VStack(spacing: 12) {
-                            CustomMeshGradientButtonLabel(
-                                title: options[idx].title,
-                                description: options[idx].description,
-                                colors: options[idx].colors
-                            )
-                            .padding(.horizontal)
-                            
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(options[idx].goesGoodWithDesc)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .padding(.horizontal)
-                        }
-                        .tag(idx)
-                    }
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Select a Filter")
+                .font(.title2.weight(.bold))
+            
+            TabView(selection: $selection) {
+                ForEach(options.indices, id: \.self) { idx in
+                    FilterCardView(
+                        title: options[idx].title,
+                        description: options[idx].description,
+                        filterName: options[idx].filterName
+                    )
+                    .tag(idx)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .automatic))
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
-                
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                Spacer(minLength: 8)
-
-                CustomButton(
-                    title: "Select This Filter",
-                    alignment: .center,
-                    backgroundColor: .primary
-                ) {
-                    guard options.indices.contains(selection) else { return }
-                    onSelect(options[selection].makeFilter())
-                    isPresented = false
-                }
-                .disabled(options.isEmpty)
             }
-            .padding()
-            .presentationDetents([.medium])
-            .presentationDragIndicator(.visible)
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+            Spacer(minLength: 8)
+            
+            CustomButton(
+                title: "Select This Filter",
+                alignment: .center,
+                backgroundColor: .primary
+            ) {
+                guard options.indices.contains(selection) else { return }
+                onSelect(options[selection].makeFilter())
+                isPresented = false
+            }
+            .disabled(options.isEmpty)
         }
+        .padding()
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
+    }
 }
