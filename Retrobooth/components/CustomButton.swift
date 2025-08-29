@@ -51,7 +51,7 @@ struct CustomButtonLabel: View {
                 }
 
                 Text(title)
-                    .font(.headline)
+                    .font(.custom("FunnelDisplay-Medium", size: 16))
                     .foregroundStyle(colorScheme == .light ? .white : .black)
             }
 
@@ -66,7 +66,7 @@ struct CustomButtonLabel: View {
         .padding(.vertical, 12)
         .padding(.horizontal)
         .background(isDisabled ? backgroundColor.opacity(0.5) : backgroundColor)
-        .cornerRadius(8)
+        .cornerRadius(96)
         .opacity(isDisabled ? 0.6 : 1.0)
     }
 }
