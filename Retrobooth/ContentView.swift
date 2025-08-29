@@ -13,7 +13,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedImages = [Image]()
+    
     @State private var pickerItems = [PhotosPickerItem]()
+    
     @State private var filterDialogShowing = false
     @State private var currentFilterName: String = "Arctic Mist"
     
@@ -125,16 +127,12 @@ struct ContentView: View {
     
     func loadImage() {
         Task {
-            await MainActor.run {
-                isProcessing = true
-                selectedImages.removeAll()
-            }
+            isProcessing = true
+            selectedImages.removeAll()
             
             let count = pickerItems.count
             guard count > 0 else {
-                await MainActor.run {
-                    isProcessing = false
-                }
+                isProcessing = false
                 return
             }
             
@@ -145,25 +143,20 @@ struct ContentView: View {
                         continue
                     }
                     
-                    // Prepare CI input off main thread
                     let beginImage = CIImage(image: inputImage)?
                         .oriented(forExifOrientation: exifOrientation(inputImage.imageOrientation))
                     
                     filter.setValue(beginImage, forKey: kCIInputImageKey)
                     
                     if let processed = applyProcessing() {
-                        await MainActor.run {
-                            selectedImages.append(processed)
-                        }
+                        selectedImages.append(processed)
                     }
                 } catch {
                     // TODO: handle here
                 }
             }
             
-            await MainActor.run {
-                isProcessing = false
-            }
+            isProcessing = false
         }
     }
     
@@ -186,7 +179,7 @@ struct ContentView: View {
         currentFilterName = determineFilterName(chosenFilter.name)
         
         // if chosenFilterCount >= 100 {
-            // requestReview()
+        // requestReview()
         // }
     }
     
