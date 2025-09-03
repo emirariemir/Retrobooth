@@ -9,9 +9,9 @@ import SwiftUI
 import PhotosUI
 
 // Keeping an enum for future permissions
+// such as `case camera = "Camera Access"`
 enum Permission: String, CaseIterable {
-    case camera = "Camera Access"
-    case photoLibrary = "Photo Library Access"
+    case photoLibrary = "Tap to allow access to your Photo Library"
     
     var isPermitted: Bool? {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
@@ -20,8 +20,7 @@ enum Permission: String, CaseIterable {
     
     var orderedIndex: Int {
         switch self {
-        case .camera: 0
-        case .photoLibrary: 1
+        case .photoLibrary: 0
         }
     }
 }
@@ -54,15 +53,22 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .sheet(isPresented: $showSheet) {
-                VStack (alignment: .leading) {
+                VStack (alignment: .leading, spacing: 10) {
                     Text("Required Permissions")
                         .font(.custom("FunnelDisplay-Medium", size: 24))
+                    
+                    Text("To give you the best experience, please enable the necessary permissions. These are only used to provide the features you expect, like saving and accessing your photos.")
+                        .font(.custom("FunnelDisplay-Light", size: 15))
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.leading)
                     
                     Spacer()
                     
                     VStack (alignment: .leading, spacing: 15) {
                         ForEach(states) { state in
-                                PermissionItem(state)
+                            PermissionItem(state) {
+                                requestPermission(0)
+                            }
                         }
                     }
                     
@@ -79,54 +85,49 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                     }
                 }
                 .padding()
-                .presentationDetents([.height(250)])
+                .presentationDetents([.height(300)])
                 .interactiveDismissDisabled()
-                .onChange(of: currentIndex) { oldValue, newValue in
-                    guard states[newValue].isPermitted == nil else { return }
-                    requestPermission(newValue)
-                }
             }
             .onAppear {
                 showSheet = !allPermissionsGranted
-                if let firstRequest = states.firstIndex(where: {$0.isPermitted == nil}) {
-                    requestPermission(firstRequest)
-                }
             }
     }
     
     @ViewBuilder
-    private func PermissionItem(_ state: PermissionState) -> some View {
-        HStack(spacing: 10) {
-            ZStack {
-                Circle()
-                    .stroke(.gray, lineWidth: 1)
-                Group {
-                    if let permitted = state.isPermitted {
-                        Image(systemName: permitted ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .foregroundStyle(permitted ? .green : .red)
-                    } else {
-                        Image(systemName: "questionmark.circle.fill")
-                            .foregroundStyle(.gray)
+    private func PermissionItem(_ state: PermissionState, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .stroke(.gray, lineWidth: 1)
+                    Group {
+                        if let permitted = state.isPermitted {
+                            Image(systemName: permitted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                .foregroundStyle(permitted ? .green : .red)
+                        } else {
+                            Image(systemName: "questionmark.circle.fill")
+                                .foregroundStyle(.gray)
+                        }
                     }
+                    .font(.title3)
+                    .transition(.symbolEffect)
                 }
-                .font(.title3)
-                .transition(.symbolEffect)
+                .frame(width: 22, height: 22)
+                
+                Text(state.id.rawValue)
+                    .font(.custom("FunnelDisplay-Light", size: 16))
             }
-            .frame(width: 22, height: 22)
-            
-            Text(state.id.rawValue)
-                .font(.custom("FunnelDisplay-Light", size: 16))
+            .frame(maxWidth: .infinity, alignment: .leading) // keeps full-row tappable
+            .contentShape(Rectangle()) // ensures tap works on empty space too
         }
+        .buttonStyle(.plain) // keeps it looking like your HStack, no blue tint
     }
     
     private func requestPermission(_ index: Int) {
         Task { @MainActor in
             let permission = states[index].id
             switch permission {
-            // TODO: Add camera access here!
-            case .camera:
-                let status = await AVCaptureDevice.requestAccess(for: .video)
-                states[index].isPermitted = status
+            // TODO: Add camera access here in future (if needed)!
             case .photoLibrary:
                 let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
                 states[index].isPermitted = status == .authorized || status == .limited
@@ -153,6 +154,11 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
     private struct PermissionState: Identifiable {
         var id: Permission
         var isPermitted: Bool?
+        
+        init(id: Permission) {
+            self.id = id
+            self.isPermitted = id.isPermitted
+        }
     }
 }
 

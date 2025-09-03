@@ -119,7 +119,7 @@ struct ContentView: View {
                 }
             }
         }
-        .permissionSheet([.camera, .photoLibrary])
+        .permissionSheet([.photoLibrary])
     }
     
     func changeFilter() {
