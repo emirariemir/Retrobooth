@@ -117,10 +117,10 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                 Text(state.id.rawValue)
                     .font(.custom("FunnelDisplay-Light", size: 16))
             }
-            .frame(maxWidth: .infinity, alignment: .leading) // keeps full-row tappable
-            .contentShape(Rectangle()) // ensures tap works on empty space too
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
         }
-        .buttonStyle(.plain) // keeps it looking like your HStack, no blue tint
+        .buttonStyle(.plain)
     }
     
     private func requestPermission(_ index: Int) {
