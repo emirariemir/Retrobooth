@@ -96,9 +96,9 @@ struct FilterSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Choose a Filter")
-                .font(.custom("FunnelDisplay-Medium", size: 16))
+                .font(.custom("FunnelDisplay-Medium", size: 20))
             Text("Swipe through filters to find the one for you.")
-                .font(.custom("FunnelDisplay-Light", size: 12))
+                .font(.custom("FunnelDisplay-Light", size: 16))
             
             TabView(selection: $selection) {
                 ForEach(options.indices, id: \.self) { idx in

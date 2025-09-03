@@ -79,12 +79,12 @@ struct FilterCardView: View {
 
             VStack(spacing: 6) {
                 Text(title)
-                    .font(.custom("FunnelDisplay-Medium", size: 16))
+                    .font(.custom("FunnelDisplay-Medium", size: 20))
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.primary)
 
                 Text(description)
-                    .font(.custom("FunnelDisplay-Light", size: 12))
+                    .font(.custom("FunnelDisplay-Light", size: 16))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
