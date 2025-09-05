@@ -8,30 +8,41 @@
 import SwiftUI
 
 struct ExportButton: View {
+    var isDisabled: Bool
+    
     var body: some View {
         HStack {
             Image(systemName: "square.and.arrow.up")
                 .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.black)
+                .foregroundStyle(isDisabled ? .gray : .black)
             Text("Export")
                 .font(.custom("FunnelDisplay-Medium", size: 16))
-                .foregroundStyle(.black)
+                .foregroundStyle(isDisabled ? .gray : .black)
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 10)
+        .background(backgroundView(isDisabled: isDisabled))
+        .cornerRadius(64)
         .background(
+            isDisabled ? nil :
+            RoundedRectangle(cornerRadius: 64)
+                .stroke(.white, lineWidth: 4)
+        )
+    }
+    
+    @ViewBuilder
+    private func backgroundView(isDisabled: Bool) -> some View {
+        if isDisabled {
+            RoundedRectangle(cornerRadius: 64)
+                .foregroundStyle(.white.opacity(0.8))
+        } else {
             AnimatedMeshGradientView()
                 .overlay(
                     RoundedRectangle(cornerRadius: 64)
                         .foregroundStyle(.white)
                         .blur(radius: 32)
                 )
-        )
-        .cornerRadius(64)
-        .background(
-            RoundedRectangle(cornerRadius: 64)
-                .stroke(.white, lineWidth: 4)
-        )
+        }
     }
 }
 

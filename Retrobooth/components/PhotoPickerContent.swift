@@ -10,8 +10,8 @@ import PhotosUI
 
 struct PhotoPickerContent: View {
     let imageName: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     
     var body: some View {
         VStack(spacing: 6) {
@@ -20,7 +20,7 @@ struct PhotoPickerContent: View {
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .foregroundStyle(.blue)
-                .padding(.bottom, 2)
+                .padding(.bottom, 6)
             
             Text(title)
                 .font(.custom("FunnelDisplay-Medium", size: 20))

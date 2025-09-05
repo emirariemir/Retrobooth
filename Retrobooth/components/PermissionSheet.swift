@@ -54,10 +54,10 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
         content
             .sheet(isPresented: $showSheet) {
                 VStack (alignment: .leading, spacing: 10) {
-                    Text("Required Permissions")
+                    Text("Photo Access Needed")
                         .font(.custom("FunnelDisplay-Medium", size: 24))
                     
-                    Text("To give you the best experience, please enable the necessary permissions. These are only used to provide the features you expect, like saving and accessing your photos.")
+                    Text("We just need access to your photo library so you can save and edit your pictures. That’s it — nothing else.")
                         .font(.custom("FunnelDisplay-Light", size: 15))
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.leading)
@@ -74,7 +74,7 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                     
                     Spacer()
                     
-                    CustomButton(title: thereIsAnyRejection ? "Go to settings" : "Continue", alignment: .center, backgroundColor: .primary, isDisabled: !allPermissionsGranted && !thereIsAnyRejection) {
+                    CustomButton(title: thereIsAnyRejection ? "Open Settings" : "Continue", alignment: .center, backgroundColor: .primary, isDisabled: !allPermissionsGranted && !thereIsAnyRejection) {
                         if thereIsAnyRejection {
                             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                                 openUrl(settingsUrl)
@@ -114,7 +114,7 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                 }
                 .frame(width: 22, height: 22)
                 
-                Text(state.id.rawValue)
+                Text(LocalizedStringKey(state.id.rawValue))
                     .font(.custom("FunnelDisplay-Light", size: 16))
             }
             .frame(maxWidth: .infinity, alignment: .leading)

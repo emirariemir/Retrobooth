@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CustomButton: View {
-    var title: String
+    var title: LocalizedStringKey
     var description: String?
     var icon: String?
     var alignment: HorizontalAlignment = .leading
@@ -34,7 +34,7 @@ struct CustomButton: View {
 struct CustomButtonLabel: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
-    var title: String
+    var title: LocalizedStringKey
     var description: String?
     var icon: String?
     var alignment: HorizontalAlignment = .leading

@@ -60,8 +60,8 @@ struct ContentView: View {
                         PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
                             PhotoPickerContent(
                                 imageName: "empty-folder",
-                                title: "No picture, press me.",
-                                description: "You can select up to 10 photos."
+                                title: "No picture selected. Tap here.",
+                                description: "Pick up to 10 photos."
                             )
                         }
                         .buttonStyle(.plain)
@@ -76,9 +76,9 @@ struct ContentView: View {
                         ShareLink(
                             items: selectedImages
                         ) { img in
-                            SharePreview("Your beautiful image", image: img)
+                            SharePreview("Your Work", image: img)
                         } label: {
-                            ExportButton()
+                            ExportButton(isDisabled: selectedImages.isEmpty)
                         }
                         .disabled(selectedImages.isEmpty)
                     }
@@ -107,7 +107,7 @@ struct ContentView: View {
                         ProgressView()
                             .progressViewStyle(.circular)
                         
-                        Text("Processing photos…")
+                        Text("Applying the magic…")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -179,9 +179,9 @@ struct ContentView: View {
         
         currentFilterName = determineFilterName(chosenFilter.name)
         
-        // if chosenFilterCount >= 100 {
-        // requestReview()
-        // }
+        if chosenFilterCount >= 40 {
+            requestReview()
+        }
     }
     
     func determineFilterName(_ filterName: String) -> String {
@@ -194,6 +194,8 @@ struct ContentView: View {
             return "Patina Grain"
         case "CIPolarRadiance":
             return "Polar Radiance"
+        case "CISilverGrit":
+            return "Silver Grit"
         case "CIRetroPixel":
             return "Retro Pixel"
         default:

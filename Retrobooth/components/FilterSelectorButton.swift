@@ -16,7 +16,7 @@ struct FilterSelectorButton: View {
             HStack(alignment: .center, spacing: 16) {
                 VStack(alignment: .leading) {
                     Text("Selected filter:")
-                        .font(.custom("FunnelDisplay-Light", size: 12))
+                        .font(.custom("FunnelDisplay-Light", size: 14))
                         .foregroundStyle(.white)
                         .opacity(0.7)
                     Text(filterName)

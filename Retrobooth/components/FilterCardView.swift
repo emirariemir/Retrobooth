@@ -12,7 +12,7 @@ import CoreImage.CIFilterBuiltins
 struct FilterCardView: View {
     // Public API
     let title: String
-    let description: String
+    let description: LocalizedStringKey
     let filterName: String
 
     // Layout tunables
@@ -84,7 +84,7 @@ struct FilterCardView: View {
                     .foregroundStyle(.primary)
 
                 Text(description)
-                    .font(.custom("FunnelDisplay-Light", size: 16))
+                    .font(.custom("FunnelDisplay-Light", size: 14))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)

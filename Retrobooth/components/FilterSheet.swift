@@ -11,9 +11,7 @@ import CoreImage
 struct FilterOption: Identifiable {
     let id = UUID()
     let title: String
-    let description: String
-    let goesGoodWithDesc: String
-    let colors: [Color]
+    let description: LocalizedStringKey
     let filterName: String
     let makeFilter: () -> CIFilter
 }
@@ -26,65 +24,36 @@ struct FilterSheet: View {
         .init(
             title: "Caramel Fade",
             description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
-            goesGoodWithDesc: "Perfect for warm portraits, cozy café moments, golden hour light, and scenes where you want a soft nostalgic glow.",
-            colors: [
-                Color("CaramelFade1"),
-                Color("CaramelFade2"),
-                Color("CaramelFade3"),
-                Color("CaramelFade4")
-            ],
             filterName: "caramelFade",
             makeFilter: { CIFilter.caramelFade() }
         ),
         .init(
             title: "Arctic Mist",
-            description: "A crisp, cool look: daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
-            goesGoodWithDesc: "Works beautifully with snowy landscapes, fresh seaside captures, minimalist setups, or any photo that needs a clean, airy vibe.",
-            colors: [
-                Color("ArcticMist1"),
-                Color("ArcticMist2"),
-                Color("ArcticMist3"),
-                Color("ArcticMist4")
-            ],
+            description: "Daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
             filterName: "arcticMist",
             makeFilter: { CIFilter.arcticMist() }
         ),
         .init(
             title: "Polar Radiance",
             description: "Brighter, icier look: stronger cool shift, white-point bias, clean bloom, crisp edges.",
-            goesGoodWithDesc: "Best paired with night skies, glacial scenery, futuristic architecture, or shots that need sharp highlights and radiant energy.",
-            colors: [
-                Color("PolarRadiance1"),
-                Color("PolarRadiance2"),
-                Color("PolarRadiance3"),
-                Color("PolarRadiance4")
-            ],
             filterName: "polarRadiance",
             makeFilter: { CIFilter.polarRadiance() }
         ),
         .init(
             title: "Patina Grain",
             description: "Cool-leaning vintage: lighter sepia, gentle cool shift, soft film grain, deeper vignette.",
-            goesGoodWithDesc: "Ideal for moody street photography, retro interiors, timeless portraits, and anything that calls for a film-like vintage texture.",
-            colors: [
-                Color("PatinaGrain1"),
-                Color("PatinaGrain2"),
-                Color("PatinaGrain3"),
-                Color("PatinaGrain4")
-            ],
             filterName: "patinaGrain",
             makeFilter: { CIFilter.patinaGrain() }
         ),
         .init(
+            title: "Silver Grit",
+            description: "Monochrome grit: deep desaturation, crisp contrast, heavy film grain, subtle vignette.",
+            filterName: "silverGrit",
+            makeFilter: { CIFilter.silverGrit() }
+        ),
+        .init(
             title: "Retro Pixel",
             description: "Playful pixelation with posterized colors and a hint of vignette for retro readability.",
-            goesGoodWithDesc: "Great for game screenshots, neon-lit selfies, playful edits, or any scene where a nostalgic 8-bit arcade mood fits the story.",
-            colors: [
-                Color("RetroPixel1"),
-                Color("RetroPixel2"),
-                Color("RetroPixel3"),
-                Color("RetroPixel4")
-            ],
             filterName: "retroPixel",
             makeFilter: { CIFilter.retroPixel() }
         ),
@@ -95,9 +64,9 @@ struct FilterSheet: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Choose a Filter")
+            Text("Pick a filter")
                 .font(.custom("FunnelDisplay-Medium", size: 20))
-            Text("Swipe through filters to find the one for you.")
+            Text("Swipe through filters and pick the one that feels right.")
                 .font(.custom("FunnelDisplay-Light", size: 16))
             
             TabView(selection: $selection) {
@@ -117,7 +86,7 @@ struct FilterSheet: View {
             Spacer(minLength: 8)
             
             CustomButton(
-                title: "Select This Filter",
+                title: "Apply filter",
                 alignment: .center,
                 backgroundColor: .primary
             ) {

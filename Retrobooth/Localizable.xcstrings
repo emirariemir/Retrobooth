@@ -1,0 +1,394 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıcak ve sinematik bir hava: hafif bir sepya dokunuşu, belirsiz bir bulanıklık ve yumuşak bir vinyet."
+          }
+        }
+      }
+    },
+    "Apply filter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apply filter"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtreyi uygula"
+          }
+        }
+      }
+    },
+    "Applying the magic…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applying the magic…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sihir yapılıyor…"
+          }
+        }
+      }
+    },
+    "Brighter, icier look: stronger cool shift, white-point bias, clean bloom, crisp edges." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brighter, icier look: stronger cool shift, white-point bias, clean bloom, crisp edges."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha parlak ve buz gibi bir görünüm: güçlü soğuk ton kayması, beyaz noktaya yönelim, temiz bir parlama ve keskin hatlar."
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam et"
+          }
+        }
+      }
+    },
+    "Cool-leaning vintage: lighter sepia, gentle cool shift, soft film grain, deeper vignette." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cool-leaning vintage: lighter sepia, gentle cool shift, soft film grain, deeper vignette."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serin tonlara kayan retro bir hava: açık sepya, hafif soğuk kayma, yumuşak film tanesi ve derin bir vinyet."
+          }
+        }
+      }
+    },
+    "Daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gün ışığına kayan tonlar, turkuaz esintisi, yumuşak bir canlılık, hafif bir parlama ve ince bir vinyet."
+          }
+        }
+      }
+    },
+    "Done with those?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done with those?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunlarla işin bitti mi?"
+          }
+        }
+      }
+    },
+    "Export" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dışarı aktar"
+          }
+        }
+      }
+    },
+    "Monochrome grit: deep desaturation, crisp contrast, heavy film grain, subtle vignette." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monochrome grit: deep desaturation, crisp contrast, heavy film grain, subtle vignette."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siyah-beyaz sertlik: yoğun doygunluk azaltımı, net kontrast, güçlü film tanesi ve ince bir vinyet."
+          }
+        }
+      }
+    },
+    "No picture selected. Tap here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No picture selected. Tap here."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotoğraf seçmek için buraya dokun."
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Settings"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarları aç"
+          }
+        }
+      }
+    },
+    "Photo Access Needed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo Access Needed"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotoğraf Erişimi Gerekli"
+          }
+        }
+      }
+    },
+    "Pick a filter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick a filter"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir filtre seç"
+          }
+        }
+      }
+    },
+    "Pick up to 10 photos." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick up to 10 photos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En fazla 10 fotoğraf seçebilirsin."
+          }
+        }
+      }
+    },
+    "Playful pixelation with posterized colors and a hint of vignette for retro readability." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playful pixelation with posterized colors and a hint of vignette for retro readability."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyun tadında pikselleştirme, posterize renkler ve retro havasını tamamlayan küçük bir vinyet."
+          }
+        }
+      }
+    },
+    "Press here to start all over again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press here to start all over again."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baştan başlamak için buraya dokun."
+          }
+        }
+      }
+    },
+    "Retrobooth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retrobooth"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retrobooth"
+          }
+        }
+      }
+    },
+    "Selected filter:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selected filter:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilen filtre:"
+          }
+        }
+      }
+    },
+    "Swipe through filters and pick the one that feels right." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe through filters and pick the one that feels right."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtreleri dolaş, sana en uygun olanı seç."
+          }
+        }
+      }
+    },
+    "Tap to allow access to your Photo Library" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to allow access to your Photo Library"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotoğraf arşivine erişim vermek için dokun."
+          }
+        }
+      }
+    },
+    "We just need access to your photo library so you can save and edit your pictures. That’s it — nothing else." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We just need access to your photo library so you can save and edit your pictures. That’s it — nothing else."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadece fotoğraflarını kaydedip düzenleyebilmen için arşivine erişim istiyoruz. Hepsi bu, başka hiçbir şeye gerek yok."
+          }
+        }
+      }
+    },
+    "Your Work" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Work"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eserin"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
