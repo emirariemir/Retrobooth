@@ -1,18 +1,36 @@
 # Retrobooth
-An experimental SwiftUI playground where I explored some of the coolest iOS APIs while building a simple retro photo editor.
+A tiny open-source SwiftUI app that gives photos a tasteful retro vibe using Core Image custom filters. Pick multiple photos, swipe through them, apply a filter, and share — all with a smooth, native feel.
 
-## What is Retrobooth?
-Retrobooth lets you:
-- Import a photo using the new `PhotosPicker`.
-- Apply different Core Image filters (Sepia, Pixellate, Gaussian Blur, Crystallize, and more).
-- Adjust filter intensity in real time with a slider.
-- Share the processed photo using `ShareLink`.
-- Prompt users for an App Store review after repeated interactions.
-- Use confirmation dialogs for filter selection.
+---
 
-It’s not a full-featured app—just a playground for learning and trying out iOS frameworks. But along the way, I learned how to:
-- Work with `CIImage` and safely apply Core Image filters.
-- Build SwiftUI UIs for importing and previewing images.
-- Manage state and context with `@State`, `@AppStorage`, and environment values.
-- Hook into the StoreKit API to ask for ratings at the right time.
-- Use SwiftUI’s modern APIs like `NavigationStack` and `ContentUnavailableView`.
+## Features
+### SwiftUI UI/UX
+- `NavigationStack` layout, paged `TabView` with page indicators
+- Progress overlay while processing (thin-material card + `ProgressView`)
+- Custom Filter Sheet to pick the active filter
+### Photo workflow
+- `PhotosPicker` (select up to 10 images)
+- Inline `ShareLink` export (with SharePreview)
+### Core Image pipeline
+- Uses `CoreImage.CIFilterBuiltins` + `CIContext`
+- Batch processing with orientation handling (`exifOrientation`)
+### Delight & polish
+- In-app review trigger via `StoreKit` after repeated use
+- Lightweight usage tracking with `@AppStorage`
+### Filters included
+- Arctic Mist, Caramel Fade, Patina Grain, Polar Radiance, Silver Grit, Retro Pixel
+
+---
+
+## Screenshots (coming soon)
+
+---
+
+## Requirements
+Xcode 15+
+iOS 16+ (for PhotosPicker & NavigationStack)
+
+---
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
