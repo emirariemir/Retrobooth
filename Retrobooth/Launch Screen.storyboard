@@ -15,19 +15,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="retrobooth-icon" translatesAutoresizingMaskIntoConstraints="NO" id="9Po-A4-szZ">
-                                <rect key="frame" x="136.66666666666666" y="351" width="119.99999999999997" height="150"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-middle-v2" translatesAutoresizingMaskIntoConstraints="NO" id="OiQ-ij-Gy2">
+                                <rect key="frame" x="111.66666666666669" y="376" width="170" height="100"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="IwD-MV-3kX"/>
-                                    <constraint firstAttribute="width" constant="120" id="udA-bI-Cth"/>
+                                    <constraint firstAttribute="width" constant="170" id="QAd-mF-E6r"/>
+                                    <constraint firstAttribute="height" constant="100" id="jdK-Mo-zvn"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="9Po-A4-szZ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Ce4-EL-hhC"/>
-                            <constraint firstItem="9Po-A4-szZ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Rda-yI-YkY"/>
+                            <constraint firstItem="OiQ-ij-Gy2" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="EcT-N4-eZJ"/>
+                            <constraint firstItem="OiQ-ij-Gy2" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="qeA-iC-ZhE"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -37,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="retrobooth-icon" width="1024" height="1024"/>
+        <image name="splash-middle-v2" width="959" height="255"/>
     </resources>
 </document>

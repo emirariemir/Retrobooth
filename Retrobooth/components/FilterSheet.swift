@@ -62,42 +62,80 @@ struct FilterSheet: View {
     
     @State private var selection: Int = 0
     
+    @State private var sheetHeight: CGFloat = .zero
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Pick a filter")
-                .font(.custom("FunnelDisplay-Medium", size: 20))
-            Text("Swipe through filters and pick the one that feels right.")
-                .font(.custom("FunnelDisplay-Light", size: 16))
-            
-            TabView(selection: $selection) {
-                ForEach(options.indices, id: \.self) { idx in
-                    FilterCardView(
-                        title: options[idx].title,
-                        description: options[idx].description,
-                        filterName: options[idx].filterName
-                    )
-                    .padding()
-                    .tag(idx)
+        ZStack {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Pick a filter")
+                    .font(.custom("FunnelDisplay-Medium", size: 20))
+                Text("Swipe through filters and pick the one that feels right.")
+                    .font(.custom("FunnelDisplay-Light", size: 16))
+                
+                TabView(selection: $selection) {
+                    ForEach(options.indices, id: \.self) { idx in
+                        FilterCardView(
+                            title: options[idx].title,
+                            description: options[idx].description,
+                            filterName: options[idx].filterName
+                        )
+                        .padding(.horizontal)
+                        .tag(idx)
+                    }
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .frame(height: 280)
+                
+                if options.count > 1 {
+                    PageDots(count: options.count, selection: $selection)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.bottom)
+                }
+                
+                CustomButton(
+                    title: "Apply filter",
+                    alignment: .center,
+                    backgroundColor: .primary
+                ) {
+                    guard options.indices.contains(selection) else { return }
+                    onSelect(options[selection].makeFilter())
+                    isPresented = false
+                }
+                .disabled(options.isEmpty)
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            
-            Spacer(minLength: 8)
-            
-            CustomButton(
-                title: "Apply filter",
-                alignment: .center,
-                backgroundColor: .primary
-            ) {
-                guard options.indices.contains(selection) else { return }
-                onSelect(options[selection].makeFilter())
-                isPresented = false
+            .padding()
+            .onGeometryChange(for: CGSize.self) {
+                $0.size
+            } action: { newValue in
+                sheetHeight = newValue.height
             }
-            .disabled(options.isEmpty)
+            .presentationDragIndicator(.visible)
         }
-        .padding()
-        .presentationDetents([.medium])
-        .presentationDragIndicator(.visible)
+        .presentationDetents([.height(sheetHeight)])
     }
 }
+
+// MARK: - Reusable dots
+struct PageDots: View {
+    let count: Int
+    @Binding var selection: Int
+    var dotSize: CGFloat = 8
+    var activeWidth: CGFloat = 20
+    var spacing: CGFloat = 8
+    
+    var body: some View {
+        HStack(spacing: spacing) {
+            ForEach(0..<count, id: \.self) { i in
+                Capsule(style: .continuous)
+                    .fill(i == selection ? Color.primary.opacity(0.9) : Color.primary.opacity(0.25))
+                    .frame(width: i == selection ? activeWidth : dotSize,
+                           height: dotSize)
+                    .animation(.spring(response: 0.35, dampingFraction: 0.8), value: selection)
+                    .contentShape(Rectangle())
+                    .onTapGesture { selection = i }
+            }
+        }
+    }
+}
+

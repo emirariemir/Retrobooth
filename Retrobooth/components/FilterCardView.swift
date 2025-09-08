@@ -19,7 +19,6 @@ struct FilterCardView: View {
     private let circleSize: CGFloat = 126
     private let cornerRadius: CGFloat = 16
     private let padding: CGFloat = 14
-    private let context = CIContext()
 
     var body: some View {
         VStack(spacing: 12) {
@@ -113,7 +112,7 @@ struct FilterCardView_Previews: PreviewProvider {
         Group {
             FilterCardView(
                 title: "Caramel Fade",
-                description: "Warm tones with a cozy, cinematic feel.",
+                description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
                 filterName: "caramelFade"
             )
             .padding()
