@@ -1,3 +1,5 @@
+<img width="2008" height="381" alt="github-repo-thumbnail" src="https://github.com/user-attachments/assets/36940e31-8c7b-4bda-ad54-7db37513e02f" />
+
 # Retrobooth
 A tiny open-source SwiftUI app that gives photos a tasteful retro vibe using Core Image custom filters. Pick multiple photos, swipe through them, apply a filter, and share — all with a smooth, native feel.
 
