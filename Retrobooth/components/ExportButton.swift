@@ -25,7 +25,7 @@ struct ExportButton: View {
         .cornerRadius(64)
         .background(
             isDisabled ? nil :
-            RoundedRectangle(cornerRadius: 64)
+                RoundedRectangle(cornerRadius: 64)
                 .stroke(.white, lineWidth: 4)
         )
     }
@@ -49,34 +49,49 @@ struct ExportButton: View {
 struct AnimatedMeshGradientView: View {
     @State private var wobble = false
     @State private var bobble = false
-
+    
     var body: some View {
-        MeshGradient(
-            width: 3,
-            height: 3,
-            points: [
-                [0.0, 0.0], [bobble ? 0.5 : 1.0, 0.0], [1.0, 0.0],
-                [0.0, 0.5], wobble ? [0.1, 0.5] : [0.8, 0.2], [1.0, -0.5],
-                [0.0, 1.0], [1.0, bobble ? 2.0 : 1.0], [1.0, 1.0]
-            ],
-            colors: [
-                bobble ? Color("SoftGrey") : Color("SoftGreen"),
-                bobble ? Color("SoftPurple") : Color("SoftGreen"),
-                wobble ? Color("SoftPurple") : Color("SoftPink"),
-                wobble ? Color("SoftGreen") : Color("SoftGrey"),
-                wobble ? Color("SoftPink") : Color("SoftPurple"),
-                wobble ? Color("SoftPink") : Color("SoftGreen"),
-                wobble ? Color("SoftGreen") : Color("SoftPink"),
-                wobble ? Color("SoftGreen") : Color("SoftGrey"),
-                bobble ? Color("SoftPink") : Color("SoftGreen")
-            ]
-        )
-        .onAppear {
-            withAnimation(.easeInOut(duration: 4).repeatForever(autoreverses: true)) {
-                wobble.toggle()
-            }
-            withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
-                bobble.toggle()
+        Group {
+            if #available(iOS 18.0, *) {
+                MeshGradient(
+                    width: 3,
+                    height: 3,
+                    points: [
+                        [0.0, 0.0], [bobble ? 0.5 : 1.0, 0.0], [1.0, 0.0],
+                        [0.0, 0.5], wobble ? [0.1, 0.5] : [0.8, 0.2], [1.0, -0.5],
+                        [0.0, 1.0], [1.0, bobble ? 2.0 : 1.0], [1.0, 1.0]
+                    ],
+                    colors: [
+                        bobble ? Color("SoftGrey") : Color("SoftGreen"),
+                        bobble ? Color("SoftPurple") : Color("SoftGreen"),
+                        wobble ? Color("SoftPurple") : Color("SoftPink"),
+                        wobble ? Color("SoftGreen") : Color("SoftGrey"),
+                        wobble ? Color("SoftPink") : Color("SoftPurple"),
+                        wobble ? Color("SoftPink") : Color("SoftGreen"),
+                        wobble ? Color("SoftGreen") : Color("SoftPink"),
+                        wobble ? Color("SoftGreen") : Color("SoftGrey"),
+                        bobble ? Color("SoftPink") : Color("SoftGreen")
+                    ]
+                )
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 4).repeatForever(autoreverses: true)) {
+                        wobble.toggle()
+                    }
+                    withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
+                        bobble.toggle()
+                    }
+                }
+            } else {
+                // Fallback
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color("SoftGreen"),
+                        Color("SoftPurple"),
+                        Color("SoftPink")
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
             }
         }
     }
