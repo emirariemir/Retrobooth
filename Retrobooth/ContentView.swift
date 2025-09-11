@@ -153,7 +153,11 @@ struct ContentView: View {
                         selectedImages.append(processed)
                     }
                 } catch {
-                    // TODO: handle here
+                    print("Failed to load image: \(error.localizedDescription)")
+                    
+                    selectedImages.append(Image(systemName: "exclamationmark.triangle"))
+                    
+                    continue
                 }
             }
             
