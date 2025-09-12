@@ -12,34 +12,37 @@ import StoreKit
 import SwiftUI
 
 struct ContentView: View {
+    @State private var pickerItems = [PhotosPickerItem]()
+    @State private var originals = [CIImage]()
     @State private var selectedImages = [Image]()
     
-    @State private var pickerItems = [PhotosPickerItem]()
+    @State private var filter: CIFilter = CIFilter.arcticMist()
+    @State private var currentFilterName: String = "Arctic Mist"
+    @State private var filterNames: [String] = []
+    @State private var currentIndex: Int = 0
     
     @State private var filterDialogShowing = false
-    @State private var currentFilterName: String = "Arctic Mist"
+    @State private var isProcessing = false
     
     @AppStorage("chosenFilterCount") var chosenFilterCount = 0
     @Environment(\.requestReview) var requestReview
     
-    @State private var filter: CIFilter = CIFilter.arcticMist()
     let context = CIContext()
-    
-    @State private var isProcessing = false
     
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack(alignment: .leading) {
                     if selectedImages.count > 0 {
-                        TabView {
-                            ForEach(0..<selectedImages.count, id: \.self) { i in
+                        TabView(selection: $currentIndex) {
+                            ForEach(selectedImages.indices, id: \.self) { i in
                                 selectedImages[i]
                                     .resizable()
                                     .scaledToFit()
                                     .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
                                     .cornerRadius(8)
                                     .padding(.horizontal, 8)
+                                    .tag(i)
                             }
                             
                             PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
@@ -52,10 +55,19 @@ struct ContentView: View {
                             .padding(.vertical, 20)
                             .buttonStyle(.plain)
                             .onChange(of: pickerItems, loadImage)
+                            .tag(selectedImages.count)
                         }
                         .tabViewStyle(.page)
                         .indexViewStyle(.page(backgroundDisplayMode: .always))
-                        
+                        .onChange(of: currentIndex) { oldIndex, newIndex in
+                            withAnimation(.spring(response: 0.30, dampingFraction: 0.9)) {
+                                if newIndex < filterNames.count {
+                                    currentFilterName = filterNames[newIndex]
+                                } else {
+                                    currentFilterName = "Swipe back"
+                                }
+                            }
+                        }
                     } else {
                         PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
                             PhotoPickerContent(
@@ -130,34 +142,35 @@ struct ContentView: View {
         Task {
             isProcessing = true
             selectedImages.removeAll()
+            originals.removeAll()
+            filterNames.removeAll()
+            currentIndex = 0
             
-            let count = pickerItems.count
-            guard count > 0 else {
+            guard !pickerItems.isEmpty else {
                 isProcessing = false
                 return
             }
             
-            for (_, item) in pickerItems.enumerated() {
+            for item in pickerItems {
                 do {
-                    guard let imageData = try await item.loadTransferable(type: Data.self),
-                          let inputImage = UIImage(data: imageData) else {
-                        continue
-                    }
+                    guard let data = try await item.loadTransferable(type: Data.self),
+                          let ui = UIImage(data: data) else { continue }
                     
-                    let beginImage = CIImage(image: inputImage)?
-                        .oriented(forExifOrientation: exifOrientation(inputImage.imageOrientation))
+                    guard let ci = CIImage(image: ui)?
+                        .oriented(forExifOrientation: exifOrientation(ui.imageOrientation)) else { continue }
                     
-                    filter.setValue(beginImage, forKey: kCIInputImageKey)
+                    originals.append(ci)
                     
+                    filter.setValue(ci, forKey: kCIInputImageKey)
                     if let processed = applyProcessing() {
                         selectedImages.append(processed)
                     }
+                    let initialName = determineFilterName(filter.name)
+                    filterNames.append(initialName)
                 } catch {
                     print("Failed to load image: \(error.localizedDescription)")
-                    
+                    originals.append(CIImage(color: .clear).cropped(to: .init(x: 0, y: 0, width: 1, height: 1)))
                     selectedImages.append(Image(systemName: "exclamationmark.triangle"))
-                    
-                    continue
                 }
             }
             
@@ -168,25 +181,43 @@ struct ContentView: View {
     
     func applyProcessing() -> Image?  {
         guard let outputImage =  filter.outputImage else { return nil }
-        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent)
-        else { return nil }
+        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
         let uiImage = UIImage(cgImage: cgImage)
         let finalImg = Image(uiImage: uiImage)
         return finalImg
     }
     
-    @MainActor func setFilter (_ chosenFilter: CIFilter) {
+    @MainActor
+    func setFilter(_ chosenFilter: CIFilter) {
         filter = chosenFilter
-        loadImage()
         filterDialogShowing = false
         chosenFilterCount += 1
         
         currentFilterName = determineFilterName(chosenFilter.name)
         
+        if currentIndex < filterNames.count {
+            let newName = determineFilterName(chosenFilter.name)
+            print(currentIndex)
+            filterNames[currentIndex] = newName
+        } else {
+            currentFilterName = "Swipe back"
+        }
+        
+        guard originals.indices.contains(currentIndex),
+              selectedImages.indices.contains(currentIndex) else { return }
+        
+        let ci = originals[currentIndex]
+        filter.setValue(ci, forKey: kCIInputImageKey)
+        
+        if let processed = applyProcessing() {
+            selectedImages[currentIndex] = processed
+        }
+        
         if chosenFilterCount >= 40 {
             requestReview()
         }
     }
+    
     
     func determineFilterName(_ filterName: String) -> String {
         switch filterName {
