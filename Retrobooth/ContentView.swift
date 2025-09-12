@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var pickerItems = [PhotosPickerItem]()
     @State private var originals = [CIImage]()
     @State private var selectedImages = [Image]()
+    @State private var showLibrary = false
     
     @State private var filter: CIFilter = CIFilter.arcticMist()
     @State private var currentFilterName: String = "Arctic Mist"
@@ -44,18 +45,6 @@ struct ContentView: View {
                                     .padding(.horizontal, 8)
                                     .tag(i)
                             }
-                            
-                            PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .images) {
-                                PhotoPickerContent(
-                                    imageName: "change",
-                                    title: "Done with those?",
-                                    description: "Press here to start all over again."
-                                )
-                            }
-                            .padding(.vertical, 20)
-                            .buttonStyle(.plain)
-                            .onChange(of: pickerItems, loadImage)
-                            .tag(selectedImages.count)
                         }
                         .tabViewStyle(.page)
                         .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -77,13 +66,13 @@ struct ContentView: View {
                             )
                         }
                         .buttonStyle(.plain)
-                        .onChange(of: pickerItems, loadImage)
                     }
                     
                     Spacer()
                     
                     HStack {
-                        FilterSelectorButton(filterName: currentFilterName, action: changeFilter)
+                        FilterSelectorButton(filterName: currentFilterName, action: changeFilter, isDisabled: selectedImages.isEmpty)
+                            .disabled(selectedImages.isEmpty)
                         
                         ShareLink(
                             items: selectedImages
@@ -102,6 +91,18 @@ struct ContentView: View {
                         Text("Retrobooth")
                             .font(.custom("FunnelDisplay-Medium", size: 32))
                             .foregroundColor(.primary)
+                    }
+                    ToolbarItem(placement: .primaryAction) {
+                        Menu {
+                            Button("Edit selections") { showLibrary = true }
+                            Button("Remove photos", role: .destructive) {
+                                selectedImages.removeAll()
+                                pickerItems.removeAll()
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .foregroundColor(.white)
+                        }
                     }
                 }
                 .sheet(isPresented: $filterDialogShowing) {
@@ -132,6 +133,13 @@ struct ContentView: View {
             }
         }
         .permissionSheet([.photoLibrary])
+        .photosPicker(
+            isPresented: $showLibrary,
+            selection: $pickerItems,
+            maxSelectionCount: 10,
+            matching: .images
+        )
+        .onChange(of: pickerItems, loadImage)
     }
     
     func changeFilter() {

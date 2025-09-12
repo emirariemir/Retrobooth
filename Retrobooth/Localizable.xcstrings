@@ -136,6 +136,9 @@
         }
       }
     },
+    "Edit selections" : {
+
+    },
     "Export" : {
       "localizations" : {
         "en" : {
@@ -287,6 +290,9 @@
           }
         }
       }
+    },
+    "Remove photos" : {
+
     },
     "Retrobooth" : {
       "localizations" : {

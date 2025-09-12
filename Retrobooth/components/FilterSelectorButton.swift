@@ -10,6 +10,7 @@ import SwiftUI
 struct FilterSelectorButton: View {
     var filterName: String
     var action: () -> Void
+    var isDisabled: Bool
     
     var body: some View {
         Button(action: action) {
@@ -29,6 +30,8 @@ struct FilterSelectorButton: View {
                     .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .opacity(isDisabled ? 0.5 : 1)
+            .disabled(isDisabled)
         }
     }
 }
