@@ -56,22 +56,29 @@ extension CIFilter {
             let base = exposure.outputImage ?? baseColor
 
             // 2) Build monochrome grain from CIRandomGenerator
+            // DO NOT "crop before blur". THIS GIVES PREVIEWS WHITE BORDER!!
             let rng = CIFilter.randomGenerator()
-            // Scale noise to control “grain size”
+
             let scale = CGFloat(truncating: inputGrainScale).clamped(to: 0.25...4)
             let scaledNoise = rng.outputImage?
                 .transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-                .cropped(to: inputImage.extent)
 
-            // Desaturate noise + soften it with Gaussian blur for a film-like clumpiness
-            let monoNoise = scaledNoise?
+            // 2) Desaturate
+            let mono = scaledNoise?
                 .applyingFilter("CIColorControls", parameters: [
                     kCIInputSaturationKey: 0.0,
                     kCIInputContrastKey: 1.0
                 ])
+
+            // 3) Soften (BLUR) while the image still has infinite/clamped extent
+            let softened = mono?
+                .clampedToExtent()
                 .applyingFilter("CIGaussianBlur", parameters: [
                     kCIInputRadiusKey: inputGrainSoftness
                 ])
+
+            let monoNoise = softened?
+                .cropped(to: inputImage.extent)
 
             // Control grain opacity via alpha in a color matrix
             let noiseAlpha = CIFilter.colorMatrix()
@@ -96,7 +103,7 @@ extension CIFilter {
 
     /// Convenience factory with sensible “gritty mono” defaults.
     static func silverGrit(
-        desaturation: Double = 1.0,        // 1.0 => fully monochrome
+        desaturation: Double = 1.0,
         contrast: Double = 1.08,
         exposureEV: Double = -0.05,
         grainAmount: Double = 0.28,

@@ -26,26 +26,40 @@ extension CIFilter {
         override var outputImage: CIImage? {
             guard let inputImage else { return nil }
 
-            // 1) Pixelation
+            let extent = inputImage.extent.integral
+
+            // 1) Pixelation (CLAMP before, CROP after)
+            let clamped = inputImage.clampedToExtent()
+
             let pixellate = CIFilter.pixellate()
-            pixellate.inputImage = inputImage
+            pixellate.inputImage = clamped
             pixellate.scale = Float(truncating: inputPixelScale)
 
-            // 2) Posterize for retro palette
-            let posterize = CIFilter.colorPosterize()
-            posterize.inputImage = pixellate.outputImage
-            posterize.levels = Float(truncating: inputPosterizeLevels)
+            // 1.2) align the pixel grid so edge tiles aren’t partial
+            let s = max(1, CGFloat(truncating: inputPixelScale))
+            let center = CGPoint(x: (extent.midX / s).rounded() * s,
+                                 y: (extent.midY / s).rounded() * s)
+            pixellate.center = center
 
-            // 3) Gentle vignette to guide focus
+            let pix = pixellate.outputImage?.cropped(to: extent) ?? inputImage
+
+            // 2) Posterize
+            let posterize = CIFilter.colorPosterize()
+            posterize.inputImage = pix
+            posterize.levels = Float(truncating: inputPosterizeLevels)
+            let post = posterize.outputImage ?? pix
+
+            // 3) Vignette (doesn’t change extent)
             let vignette = CIFilter.vignette()
-            vignette.inputImage = posterize.outputImage
+            vignette.inputImage = post
             vignette.intensity = Float(truncating: inputVignetteIntensity)
             vignette.radius = Float(truncating: inputVignetteRadius)
 
-            return vignette.outputImage
+            // Final crop to integral extent
+            return (vignette.outputImage ?? post).cropped(to: extent)
         }
     }
-
+    
     /// Convenience factory with defaults for fun "retro pixel art" look
     static func retroPixel(
         scale: Double = 18.0,
