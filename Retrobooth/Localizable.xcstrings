@@ -137,7 +137,20 @@
       }
     },
     "Edit selections" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit selections"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilenleri düzenle"
+          }
+        }
+      }
     },
     "Export" : {
       "localizations" : {
@@ -292,7 +305,20 @@
       }
     },
     "Remove photos" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove photos"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilenleri kaldır"
+          }
+        }
+      }
     },
     "Retrobooth" : {
       "localizations" : {
