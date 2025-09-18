@@ -24,7 +24,21 @@ A tiny open-source SwiftUI app that gives photos a tasteful retro vibe using Cor
 
 ---
 
-## Screenshots (coming soon)
+## Screenshots
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/2a371752-cbe2-4ade-a52a-395f7c7c53cc">
+    <img alt="App store pic 5" src="https://github.com/user-attachments/assets/2a371752-cbe2-4ade-a52a-395f7c7c53cc" width="220" />
+  </a>
+  <a href="https://github.com/user-attachments/assets/a3461811-00ea-47b1-9232-9fadbb868131">
+    <img alt="App store pic 2" src="https://github.com/user-attachments/assets/a3461811-00ea-47b1-9232-9fadbb868131" width="220" />
+  </a>
+  <a href="https://github.com/user-attachments/assets/c646b17d-fcfb-46e2-917a-266cd077fb0d">
+    <img alt="App store pic 3" src="https://github.com/user-attachments/assets/c646b17d-fcfb-46e2-917a-266cd077fb0d" width="220" />
+  </a>
+  <a href="https://github.com/user-attachments/assets/ced83431-1d55-47d8-9666-f6ab7bd851d9">
+    <img alt="App store pic 4" src="https://github.com/user-attachments/assets/ced83431-1d55-47d8-9666-f6ab7bd851d9" width="220" />
+  </a>
+</p>
 
 ---
 
