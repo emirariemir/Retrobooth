@@ -52,7 +52,7 @@ struct CustomButtonLabel: View {
 
                 Text(title)
                     .font(.custom("FunnelDisplay-Medium", size: 16))
-                    .foregroundStyle(colorScheme == .light ? .white : .black)
+                    .foregroundStyle(.black)
             }
 
             if let description = description {

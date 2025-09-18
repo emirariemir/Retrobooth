@@ -74,7 +74,7 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                     
                     Spacer()
                     
-                    CustomButton(title: thereIsAnyRejection ? "Open Settings" : "Continue", alignment: .center, backgroundColor: .primary, isDisabled: !allPermissionsGranted && !thereIsAnyRejection) {
+                    CustomButton(title: thereIsAnyRejection ? "Open Settings" : "Continue", alignment: .center, backgroundColor: .white, isDisabled: !allPermissionsGranted && !thereIsAnyRejection) {
                         if thereIsAnyRejection {
                             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                                 openUrl(settingsUrl)
@@ -100,17 +100,31 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                 ZStack {
                     Circle()
                         .stroke(.gray, lineWidth: 1)
-                    Group {
-                        if let permitted = state.isPermitted {
-                            Image(systemName: permitted ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(permitted ? .green : .red)
-                        } else {
-                            Image(systemName: "questionmark.circle.fill")
-                                .foregroundStyle(.gray)
+                    if #available(iOS 17.0, *) {
+                        Group {
+                            if let permitted = state.isPermitted {
+                                Image(systemName: permitted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                    .foregroundStyle(permitted ? .green : .red)
+                            } else {
+                                Image(systemName: "questionmark.circle.fill")
+                                    .foregroundStyle(.gray)
+                            }
                         }
+                        .font(.title3)
+                        .transition(.symbolEffect)
+                    } else {
+                        // Fallback on earlier versions
+                        Group {
+                            if let permitted = state.isPermitted {
+                                Image(systemName: permitted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                    .foregroundStyle(permitted ? .green : .red)
+                            } else {
+                                Image(systemName: "questionmark.circle.fill")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                        .font(.title3)
                     }
-                    .font(.title3)
-                    .transition(.symbolEffect)
                 }
                 .frame(width: 22, height: 22)
                 

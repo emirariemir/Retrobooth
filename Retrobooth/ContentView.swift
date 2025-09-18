@@ -35,25 +35,50 @@ struct ContentView: View {
             ZStack {
                 VStack(alignment: .leading) {
                     if selectedImages.count > 0 {
-                        TabView(selection: $currentIndex) {
-                            ForEach(selectedImages.indices, id: \.self) { i in
-                                selectedImages[i]
-                                    .resizable()
-                                    .scaledToFit()
-                                    .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
-                                    .cornerRadius(8)
-                                    .padding(.horizontal, 8)
-                                    .tag(i)
+                        if #available(iOS 17.0, *) {
+                            TabView(selection: $currentIndex) {
+                                ForEach(selectedImages.indices, id: \.self) { i in
+                                    selectedImages[i]
+                                        .resizable()
+                                        .scaledToFit()
+                                        .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
+                                        .cornerRadius(8)
+                                        .padding(.horizontal, 8)
+                                        .tag(i)
+                                }
                             }
-                        }
-                        .tabViewStyle(.page)
-                        .indexViewStyle(.page(backgroundDisplayMode: .always))
-                        .onChange(of: currentIndex) { oldIndex, newIndex in
-                            withAnimation(.spring(response: 0.30, dampingFraction: 0.9)) {
-                                if newIndex < filterNames.count {
-                                    currentFilterName = filterNames[newIndex]
-                                } else {
-                                    currentFilterName = "Swipe back"
+                            .tabViewStyle(.page)
+                            .indexViewStyle(.page(backgroundDisplayMode: .always))
+                            .onChange(of: currentIndex) { oldIndex, newIndex in
+                                withAnimation(.spring(response: 0.30, dampingFraction: 0.9)) {
+                                    if newIndex < filterNames.count {
+                                        currentFilterName = filterNames[newIndex]
+                                    } else {
+                                        currentFilterName = "Swipe back"
+                                    }
+                                }
+                            }
+                        } else {
+                            TabView(selection: $currentIndex) {
+                                ForEach(selectedImages.indices, id: \.self) { i in
+                                    selectedImages[i]
+                                        .resizable()
+                                        .scaledToFit()
+                                        .shadow(color: .black.opacity(0.4), radius: 8, x: 4, y: 4)
+                                        .cornerRadius(8)
+                                        .padding(.horizontal, 8)
+                                        .tag(i)
+                                }
+                            }
+                            .tabViewStyle(.page)
+                            .indexViewStyle(.page(backgroundDisplayMode: .always))
+                            .onChange(of: currentIndex) { newIndex in
+                                withAnimation(.spring(response: 0.30, dampingFraction: 0.9)) {
+                                    if newIndex < filterNames.count {
+                                        currentFilterName = filterNames[newIndex]
+                                    } else {
+                                        currentFilterName = "Swipe back"
+                                    }
                                 }
                             }
                         }
@@ -79,7 +104,14 @@ struct ContentView: View {
                         ) { img in
                             SharePreview("Your Work", image: img)
                         } label: {
-                            ExportButton(isDisabled: selectedImages.isEmpty)
+                            if #available(iOS 26.0, *) {
+                                Text("Export")
+                                    .foregroundStyle(selectedImages.isEmpty ? .white.opacity(0.5) : .white)
+                                    .padding()
+                                    .glassEffect()
+                            } else {
+                                ExportButton(isDisabled: selectedImages.isEmpty)
+                            }
                         }
                         .disabled(selectedImages.isEmpty)
                     }
@@ -87,10 +119,20 @@ struct ContentView: View {
                 }
                 .padding([.horizontal, .bottom])
                 .toolbar {
-                    ToolbarItem(placement: .navigation) {
-                        Text("Retrobooth")
-                            .font(.custom("FunnelDisplay-Medium", size: 32))
-                            .foregroundColor(.primary)
+                    if #available(iOS 26.0, *) {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Text("Retrobooth")
+                                .font(.custom("FunnelDisplay-Medium", size: 24))
+                                .foregroundColor(.primary)
+                                .fixedSize()
+                        }
+                        .sharedBackgroundVisibility(.hidden)
+                    } else {
+                        ToolbarItem(placement: .navigation) {
+                            Text("Retrobooth")
+                                .font(.custom("FunnelDisplay-Medium", size: 24))
+                                .foregroundColor(.primary)
+                        }
                     }
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
@@ -139,7 +181,9 @@ struct ContentView: View {
             maxSelectionCount: 10,
             matching: .images
         )
-        .onChange(of: pickerItems, loadImage)
+        .onChange(of: pickerItems) { newIndex in
+            loadImage()
+        }
     }
     
     func changeFilter() {

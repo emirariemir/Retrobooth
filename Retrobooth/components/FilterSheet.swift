@@ -69,8 +69,11 @@ struct FilterSheet: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text("Pick a filter")
                     .font(.custom("FunnelDisplay-Medium", size: 20))
+
                 Text("Swipe through filters and pick the one that feels right.")
                     .font(.custom("FunnelDisplay-Light", size: 16))
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 TabView(selection: $selection) {
                     ForEach(options.indices, id: \.self) { idx in
@@ -96,7 +99,7 @@ struct FilterSheet: View {
                 CustomButton(
                     title: "Apply filter",
                     alignment: .center,
-                    backgroundColor: .primary
+                    backgroundColor: .white
                 ) {
                     guard options.indices.contains(selection) else { return }
                     onSelect(options[selection].makeFilter())
