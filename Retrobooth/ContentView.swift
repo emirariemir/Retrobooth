@@ -17,13 +17,15 @@ struct ContentView: View {
     @State private var selectedImages = [Image]()
     @State private var showLibrary = false
     
-    @State private var filter: CIFilter = CIFilter.arcticMist()
-    @State private var currentFilterName: String = "Arctic Mist"
+    @State private var filter: CIFilter = CIFilter.caramelFade()
+    @State private var currentFilterName: String = "Caramel Fade"
     @State private var filterNames: [String] = []
     @State private var currentIndex: Int = 0
     
     @State private var filterDialogShowing = false
     @State private var isProcessing = false
+    
+    @State private var currentFilterIndex: Int = 0
     
     @AppStorage("chosenFilterCount") var chosenFilterCount = 0
     @Environment(\.requestReview) var requestReview
@@ -53,6 +55,7 @@ struct ContentView: View {
                                 withAnimation(.spring(response: 0.30, dampingFraction: 0.9)) {
                                     if newIndex < filterNames.count {
                                         currentFilterName = filterNames[newIndex]
+                                        currentFilterIndex = determineFilterIndex(currentFilterName)
                                     } else {
                                         currentFilterName = "Swipe back"
                                     }
@@ -148,7 +151,7 @@ struct ContentView: View {
                     }
                 }
                 .sheet(isPresented: $filterDialogShowing) {
-                    FilterSheet(isPresented: $filterDialogShowing) { chosenFilter in
+                    FilterSheet(isPresented: $filterDialogShowing, currentSelection: $currentFilterIndex) { chosenFilter in
                         setFilter(chosenFilter)
                     }
                 }
@@ -287,6 +290,25 @@ struct ContentView: View {
             return "Retro Pixel"
         default:
             return "Unknown Filter"
+        }
+    }
+    
+    func determineFilterIndex(_ filterName: String) -> Int {
+        switch filterName {
+        case "Caramel Fade":
+            return 0
+        case "Arctic Mist":
+            return 1
+        case "Polar Radiance":
+            return 2
+        case "Patina Grain":
+            return 3
+        case "Silver Grit":
+            return 4
+        case "Retro Pixel":
+            return 5
+        default:
+            return 0
         }
     }
     

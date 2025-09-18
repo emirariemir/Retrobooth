@@ -18,6 +18,7 @@ struct FilterOption: Identifiable {
 
 struct FilterSheet: View {
     @Binding var isPresented: Bool
+    @Binding var currentSelection: Int
     var onSelect: (CIFilter) -> Void
     
     private let options: [FilterOption] = [
@@ -59,9 +60,6 @@ struct FilterSheet: View {
         ),
     ]
     
-    
-    @State private var selection: Int = 0
-    
     @State private var sheetHeight: CGFloat = .zero
     
     var body: some View {
@@ -75,7 +73,7 @@ struct FilterSheet: View {
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
                 
-                TabView(selection: $selection) {
+                TabView(selection: $currentSelection) {
                     ForEach(options.indices, id: \.self) { idx in
                         FilterCardView(
                             title: options[idx].title,
@@ -91,7 +89,7 @@ struct FilterSheet: View {
                 .frame(height: 280)
                 
                 if options.count > 1 {
-                    PageDots(count: options.count, selection: $selection)
+                    PageDots(count: options.count, selection: $currentSelection)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.bottom)
                 }
@@ -101,8 +99,8 @@ struct FilterSheet: View {
                     alignment: .center,
                     backgroundColor: .white
                 ) {
-                    guard options.indices.contains(selection) else { return }
-                    onSelect(options[selection].makeFilter())
+                    guard options.indices.contains(currentSelection) else { return }
+                    onSelect(options[currentSelection].makeFilter())
                     isPresented = false
                 }
                 .disabled(options.isEmpty)
