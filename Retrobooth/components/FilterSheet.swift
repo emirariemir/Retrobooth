@@ -6,62 +6,23 @@
 //
 
 import SwiftUI
-import CoreImage
 
-struct FilterOption: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: LocalizedStringKey
-    let filterName: String
-    let makeFilter: () -> CIFilter
-}
-
-struct FilterSheet: View {
+struct FilterSheetCompat: View {
     @Binding var isPresented: Bool
-    @Binding var currentSelection: Int
-    var onSelect: (CIFilter) -> Void
-    
-    private let options: [FilterOption] = [
-        .init(
-            title: "Caramel Fade",
-            description: "A cozy, cinematic blend: a touch of sepia, a whisper of blur, and a soft vignette.",
-            filterName: "caramelFade",
-            makeFilter: { CIFilter.caramelFade() }
-        ),
-        .init(
-            title: "Arctic Mist",
-            description: "Daylight shift, teal hint, gentle vibrance, soft bloom, subtle vignette.",
-            filterName: "arcticMist",
-            makeFilter: { CIFilter.arcticMist() }
-        ),
-        .init(
-            title: "Polar Radiance",
-            description: "Brighter, icier look: stronger cool shift, white-point bias, clean bloom, crisp edges.",
-            filterName: "polarRadiance",
-            makeFilter: { CIFilter.polarRadiance() }
-        ),
-        .init(
-            title: "Patina Grain",
-            description: "Cool-leaning vintage: lighter sepia, gentle cool shift, soft film grain, deeper vignette.",
-            filterName: "patinaGrain",
-            makeFilter: { CIFilter.patinaGrain() }
-        ),
-        .init(
-            title: "Silver Grit",
-            description: "Monochrome grit: deep desaturation, crisp contrast, heavy film grain, subtle vignette.",
-            filterName: "silverGrit",
-            makeFilter: { CIFilter.silverGrit() }
-        ),
-        .init(
-            title: "Retro Pixel",
-            description: "Playful pixelation with posterized colors and a hint of vignette for retro readability.",
-            filterName: "retroPixel",
-            makeFilter: { CIFilter.retroPixel() }
-        ),
-    ]
-    
+    var current: FilterKind
+    var onPick: (FilterKind) -> Void
+
+    private let kinds = FilterKind.allCases
+    @State private var currentIndex: Int = 0
     @State private var sheetHeight: CGFloat = .zero
-    
+
+    init(isPresented: Binding<Bool>, current: FilterKind, onPick: @escaping (FilterKind) -> Void) {
+        self._isPresented = isPresented
+        self.current = current
+        self.onPick = onPick
+        // _currentIndex will be set in .onAppear to ensure safe index lookup
+    }
+
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 6) {
@@ -72,13 +33,14 @@ struct FilterSheet: View {
                     .font(.custom("FunnelDisplay-Light", size: 16))
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
-                
-                TabView(selection: $currentSelection) {
-                    ForEach(options.indices, id: \.self) { idx in
+
+                TabView(selection: $currentIndex) {
+                    ForEach(kinds.indices, id: \.self) { idx in
+                        let kind = kinds[idx]
                         FilterCardView(
-                            title: options[idx].title,
-                            description: options[idx].description,
-                            filterName: options[idx].filterName
+                            title: kind.displayName,
+                            description: kind.description,
+                            filterName: kind.cardFilterName
                         )
                         .padding(.horizontal)
                         .tag(idx)
@@ -87,28 +49,33 @@ struct FilterSheet: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .frame(height: 280)
-                
-                if options.count > 1 {
-                    PageDots(count: options.count, selection: $currentSelection)
+
+                if kinds.count > 1 {
+                    PageDots(count: kinds.count, selection: $currentIndex)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.bottom)
                 }
-                
+
                 CustomButton(
                     title: "Apply filter",
                     alignment: .center,
                     backgroundColor: .white
                 ) {
-                    guard options.indices.contains(currentSelection) else { return }
-                    onSelect(options[currentSelection].makeFilter())
+                    guard kinds.indices.contains(currentIndex) else { return }
+                    onPick(kinds[currentIndex])
                     isPresented = false
                 }
-                .disabled(options.isEmpty)
+                .disabled(kinds.isEmpty)
             }
             .padding()
-            .onGeometryChange(for: CGSize.self) {
-                $0.size
-            } action: { newValue in
+            .onAppear {
+                if let start = kinds.firstIndex(of: current) {
+                    currentIndex = start
+                } else {
+                    currentIndex = 0
+                }
+            }
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { newValue in
                 sheetHeight = newValue.height
             }
             .presentationDragIndicator(.visible)

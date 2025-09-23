@@ -85,7 +85,7 @@ fileprivate struct PermissionSheetViewModifier: ViewModifier {
                     }
                 }
                 .padding()
-                .presentationDetents([.height(300)])
+                .presentationDetents([.height(270)])
                 .interactiveDismissDisabled()
             }
             .onAppear {
